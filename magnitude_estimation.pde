@@ -66,28 +66,28 @@ void setup() {
 
 
   normalizeToNoise();
+  longFormatOutput();
+  
 
 
 
+  /*
 
-
-
-
-
-  //----------Get averages for timbre for plots---------------//
-  for (int participantID = 0; participantID < participantCount; participantID++) {
-    //for each participant
-    for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) { //<---here we get the arrays of all amplitude+granularity levels at that timbre level
-
-      //(1)//
-      //Find averages for each timbre estimate and subtract them (so that the remaining data is only noise)
-      ///////
-
-      //calculate the average timbre
-      float averageTimbre = mean(standardizedData[participantID][bumpyness][timbreID]);
-      print(averageTimbre + ", ");
-    }
-    println();
-  }
-  //----------averages printed---------------//
+   //----------Get averages for timbre for plots---------------//
+   for (int participantID = 0; participantID < participantCount; participantID++) {
+   //for each participant
+   for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) { //<---here we get the arrays of all amplitude+granularity levels at that timbre level
+   
+   //(1)//
+   //Find averages for each timbre estimate and subtract them (so that the remaining data is only noise)
+   ///////
+   
+   //calculate the average timbre
+   float averageTimbre = mean(standardizedData[participantID][bumpyness][timbreID]);
+   print(averageTimbre + ", ");
+   }
+   println();
+   }
+   //----------averages printed---------------//
+   */
 }
