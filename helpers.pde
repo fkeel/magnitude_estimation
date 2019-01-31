@@ -12,7 +12,7 @@ float standardDeviationAbs(float[] data) {
     n++;
   }
 
-  variance = total / n-1; // kinda confused when its n and when its n-1
+  variance = total / n-1; 
   sd = sqrt(variance);
   return sd;
 }
@@ -114,7 +114,7 @@ float mean(float[] data) {
   float total = 0;
   for (int i = 0; i < data.length; i++) {
     if (Float.isNaN(data[i])) {
- //     print(" (Ignoring invalid number for average) ");
+      //     print(" (Ignoring invalid number for average) ");
     } else {
       total = total+ data[i];
       // println("total of: " + data[i]);
@@ -131,7 +131,7 @@ float mean(float[][] data) {
   for (int i = 0; i < data.length; i++) {
     for (int y = 0; y < data[i].length; y++) {
       if (Float.isNaN(data[i][y])) {
-  //      print(" (Ignoring invalid number for average) ");
+        //      print(" (Ignoring invalid number for average) ");
       } else {
         total = total+ data[i][y];
         // println("total of: " + data[i]);
@@ -150,7 +150,7 @@ float mean(float[][][] data) {
     for (int y = 0; y < data[i].length; y++) {
       for (int z = 0; z < data[i][y].length; z++) {
         if (Float.isNaN(data[i][y][z])) {
-    //      print(" (Ignoring invalid number for average) ");
+          //      print(" (Ignoring invalid number for average) ");
         } else {
           total = total+ data[i][y][z];
           // println("total of: " + data[i]);
@@ -182,7 +182,7 @@ float standardDeviation(float[] data) {
   return sd;
 }
 
-float standardDeviation(float[][] data) {
+float standardDeviation(float[][] data) { //update for missing values
   int counter = 0;
   float total = 0;  
   float variance = 0;
@@ -196,29 +196,36 @@ float standardDeviation(float[][] data) {
     }
   }
 
-  variance = total / (counter-1); //(counter - 1) because its the sample SD
+  variance = total / ((data.length-1) * (data[1].length-1)); //data can vary in two dimensions
   sd = sqrt(variance);
   return sd;
 }
+//------------------------------------MAYBE I NEED DIFFERENT FUNCTIONS FOR Sum of Squares and SD?
 
-float standardDeviation(float[][][] data) {
+float standardDeviation(float[][][] data) { //update for missing values  (meansum square?)
   int counter = 0;
   float total = 0;  
   float variance = 0;
   float sd;
   float average = mean(data);
+  println("--------------------------------------------------------Mean is " + average);
 
   for (int i = 0; i < data.length; i++) {
     for (int y = 0; y < data[i].length; y++) {   
-      for (int z = 0; z < data[i][y].length; z++) {     
-        total = total + sq(data[i][y][z]-average);
-        counter++;
+      for (int z = 0; z < data[i][y].length; z++) { 
+        if (Float.isNaN(data[i][y][z])) {
+          print("Calculating SD (three dimensions) is Ignoring invalid number for average) ");
+        } else {
+          total = total + sq(data[i][y][z]-average);
+          counter++;
+        }
       }
     }
   }
 
-  variance = total / (counter-1); //(counter - 1) because its the sample SD
+  variance = total / ((data.length-1) * (data[1].length-1) * (data[1][1].length-1)); //data can vary in THREE dimensions
   sd = sqrt(variance);
+  println("--------------------------------------------------------SD is " + sd);
   return sd;
 }
 

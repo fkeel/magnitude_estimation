@@ -44,7 +44,7 @@ int adhesiveness = 3;
 float[][] raw = new float[5761][6];
 //order: Participant, Experience,  Timbre, Granularity, Amplitude
 float[][][][][] data       = new float [participantCount][experienceCount][timbreLevels.length][granularityLevels.length][amplitudeLevels.length];
-float[][][][][] dataTimbre = new float [participantCount][experienceCount][timbreLevels.length][granularityLevels.length][amplitudeLevels.length];
+float[][][][][] standardizedData = new float [participantCount][experienceCount][timbreLevels.length][granularityLevels.length][amplitudeLevels.length];
 
 void setup() {
 
@@ -62,83 +62,16 @@ void setup() {
 
 
 
-  //----------preprocess according to timbre---------------//
-  for (int participantID = 0; participantID < participantCount; participantID++) {
-    //for each participant
-    for (int experienceID = 0; experienceID < experienceCount; experienceID++) {
-      //and each experience
-      for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) { //<---here we get the arrays of all amplitude+granularity levels at that timbre level
-
-        //(1)//
-        //Find averages for each timbre estimate and subtract them (so that the remaining data is only noise)
-        ///////
-
-        //calculate the average timbre
-        float averageTimbre = mean(data[participantID][experienceID][timbreID]);
-        print("Participant: " + participantID + ", Experience: " + experienceID + ", timbreLevel: " + timbreLevels[timbreID] + " - "); 
-        println("Mean: " + averageTimbre);
-
-        //subtract it from the estimates
-        for (int granularityID = 0; granularityID < granularityLevels.length; granularityID++) {
-          for (int amplitudeID = 0; amplitudeID < amplitudeLevels.length; amplitudeID++) { //<---here we get all individual values
-            //using datatimbre as a placeholder to calculate the SDs from
-            dataTimbre[participantID][experienceID][timbreID][granularityID][amplitudeID] = 
-              data[participantID][experienceID][timbreID][granularityID][amplitudeID] - averageTimbre;
-            println( dataTimbre[participantID][experienceID][timbreID][granularityID][amplitudeID]);
-          }
-        }
 
 
-        /*
-        //testing. this should be zero
-         averageTimbre = mean(dataTimbre[participantID][experienceID][timbreID]);
-         print("Mean after subtracting: " + int(averageTimbre));
-         */
-      } //<---- end manipulating the array of all amplitude+granularity level estimates for timbre level
 
-      //(2)//
-      //calculate the standard deviation using the interim variable
-      ///////
-
-      float standardDeviation = standardDeviation(dataTimbre[participantID][experienceID]);
-      println((" SD: " + standardDeviation));
+  normalizeToNoise();
 
 
-      //(3)//
-      //divide the original data by the standard deviation
-      ///////
-
-      for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) {         
-        for (int granularityID = 0; granularityID < granularityLevels.length; granularityID++) {
-          for (int amplitudeID = 0; amplitudeID < amplitudeLevels.length; amplitudeID++) {
-            //updating the interim data to actual data
-            dataTimbre[participantID][experienceID][timbreID][granularityID][amplitudeID] =   
-              data[participantID][experienceID][timbreID][granularityID][amplitudeID] / standardDeviation;
-          }
-        }
-      }
 
 
-      //subtract grand mean
-      float grandMean = mean(dataTimbre[participantID][experienceID]);
-      println(("Grand Mean: " + standardDeviation));
 
-      for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) {         
-        for (int granularityID = 0; granularityID < granularityLevels.length; granularityID++) {
-          for (int amplitudeID = 0; amplitudeID < amplitudeLevels.length; amplitudeID++) {
 
-            // subtract grand mean
-          
-            dataTimbre[participantID][experienceID][timbreID][granularityID][amplitudeID] =   
-              dataTimbre[participantID][experienceID][timbreID][granularityID][amplitudeID] - grandMean;
-              println("subtracting");
-         
-          }
-        }
-      }
-    } //<--- finish the experience
-  } //<--- finish the participant
-  //----------finished preprocessing according to timbre------------//
 
 
   //----------Get averages for timbre for plots---------------//
@@ -151,7 +84,7 @@ void setup() {
       ///////
 
       //calculate the average timbre
-      float averageTimbre = mean(dataTimbre[participantID][bumpyness][timbreID]);
+      float averageTimbre = mean(standardizedData[participantID][bumpyness][timbreID]);
       print(averageTimbre + ", ");
     }
     println();
