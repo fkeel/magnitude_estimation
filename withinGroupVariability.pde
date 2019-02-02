@@ -41,7 +41,7 @@ void normalizeToNoise() {
 
   //loop through all participants and all experiences. Do calculations for each participant/experience combination
 
-  for (int participantID = 0; participantID < participantCount; participantID++) {
+  for (int participantID = 0; participantID < participantCount-1; participantID++) {
     //for each participant
     println();
     println("Begin participant " + participantID);

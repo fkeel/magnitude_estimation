@@ -13,9 +13,10 @@ int estimate = 5;
 //counters
 int participantCount = 24;
 int experienceCount = 4;
-String[] timbreLevels = {"40Hz", "80Hz", "160Hz", "320Hz"};
-String[] granularityLevels = {"gran_1", "gran_2", "gran_5", "gran_20", "gran_312"};
-String[] amplitudeLevels = {"low", "medium", "high"};
+String[] experienceTypes = {"Roughness", "Sharpness", "Bumpyness", "Adhesiveness"};
+String[] timbreLevels = {"40", "80", "160", "320"};
+String[] granularityLevels = {"312.32", "19.52", "4.88", "2.44", "1.22"};
+String[] amplitudeLevels = {"1", "2", "3"};
 
 
 //levels
@@ -44,7 +45,7 @@ int adhesiveness = 3;
 float[][] raw = new float[5761][6];
 //order: Participant, Experience,  Timbre, Granularity, Amplitude
 float[][][][][] data       = new float [participantCount][experienceCount][timbreLevels.length][granularityLevels.length][amplitudeLevels.length];
-float[][][][][] standardizedData = new float [participantCount][experienceCount][timbreLevels.length][granularityLevels.length][amplitudeLevels.length];
+float[][][][][] standardizedData = new float [participantCount-1][experienceCount][timbreLevels.length][granularityLevels.length][amplitudeLevels.length];
 
 void setup() {
 
@@ -66,8 +67,10 @@ void setup() {
 
 
   normalizeToNoise();
-  longFormatOutput();
-  
+ removeGenerallEffects();
+  // longFormatOutput();
+  neatFormatOutput("neatWithHeader_All_FINAL_effectsREALLYRemoved_2");
+
 
 
 

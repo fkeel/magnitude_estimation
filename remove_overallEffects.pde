@@ -2,28 +2,26 @@
 
 void removeGenerallEffects() {
 
-
-
+  float globalTimbreAverage[] = new float[4]; // create an array for storing mean of all experiences
+  float globalGranularityAverage[] = new float[5]; //array for storing the global mean
+  float globalAmplitudeAverage[] = new float[3];
 
   //-------------calculate average timbre over all experiences ----------------------//
 
-  float globalTimbreAverage[] = new float[4]; // create an array for storing mean of all experiences
-
-  for (int participantID = 0; participantID < participantCount; participantID++) {     //for each participant
+  for (int participantID = 0; participantID < participantCount-1; participantID++) {     //for each participant
     for (int experienceID = 0; experienceID < experienceCount; experienceID++) {       //and each experience
       for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) { 
 
         //collect the sum of the means of all timbre estimates per level
-        globalTimbreAverage[timbreID] = globalTimbreAverage[timbreID] + mean(data[participantID][experienceID][timbreID]);
+        globalTimbreAverage[timbreID] = globalTimbreAverage[timbreID] + mean(standardizedData[participantID][experienceID][timbreID]);
       }
     }
   }
 
   for (int i = 0; i < globalTimbreAverage.length; i++) {
     //divide this sum by participants*experiences to get the average (could also use or double check using counts)
-    globalTimbreAverage[i] = globalTimbreAverage[i]  / (participantCount*experienceCount); //calculate the global average from local averages
+    globalTimbreAverage[i] = globalTimbreAverage[i]  / ((participantCount-1)*experienceCount); //calculate the global average from local averages
   }
-
   //-------------done with timbre ----------------------//
 
 
@@ -31,12 +29,9 @@ void removeGenerallEffects() {
 
   //-------------calculate average granularity over all experiences ----------------------//
 
-  float globalGranularityAverage[] = new float[5]; //array for storing the global mean
-
-  for (int participantID = 0; participantID < participantCount; participantID++) { //for each participant
-    
+  for (int participantID = 0; participantID < participantCount-1; participantID++) { //for each participant
     for (int experienceID = 0; experienceID < experienceCount; experienceID++) { //and each experience
-      
+
 
       for (int granularityID = 0; granularityID < granularityLevels.length; granularityID++) { 
 
@@ -57,24 +52,17 @@ void removeGenerallEffects() {
   }
   for (int i = 0; i < globalGranularityAverage.length; i++) {
     //divide this sum by all participants & experiences
-    globalGranularityAverage[i] = globalGranularityAverage[i]  / (participantCount*experienceCount); //calculate the global average from local averages
+    globalGranularityAverage[i] = globalGranularityAverage[i]  / ((participantCount-1)*experienceCount);  //calculate the global average from local averages
   }
-
   //-------------done with granularity ----------------------//
-
-
-
 
 
 
 
   //-------------calculate average amplitude over all experiences ----------------------//
 
-  float globalAmplitudeAverage[] = new float[3];
-  for (int participantID = 0; participantID < participantCount; participantID++) {
-    //for each participant
-    for (int experienceID = 0; experienceID < experienceCount; experienceID++) {
-      //and each experience
+  for (int participantID = 0; participantID < participantCount-1; participantID++) { //for each participant
+    for (int experienceID = 0; experienceID < experienceCount; experienceID++) { //and each experience
 
       for (int amplitudeID = 0; amplitudeID < amplitudeLevels.length; amplitudeID++) {
 
@@ -97,7 +85,26 @@ void removeGenerallEffects() {
   }
   for (int i = 0; i < globalAmplitudeAverage.length; i++) {
     //divide that sum by participants*experience to get the global mean
-    globalAmplitudeAverage[i] = globalAmplitudeAverage[i]  / (participantCount*experienceCount); //calculate the global average from local averages
+    globalAmplitudeAverage[i] = globalAmplitudeAverage[i]  / ((participantCount-1)*experienceCount);  //calculate the global average from local averages
   }
   //-------------done with amplitude ----------------------//
+
+
+
+  //subtract the averages
+  for (int participantID = 0; participantID < participantCount-1; participantID++) { //for each participant
+    for (int experienceID = 0; experienceID < experienceCount; experienceID++) { //and each experience
+      for (int timbreID = 0; timbreID < timbreLevels.length; timbreID++) {
+        for (int granularityID = 0; granularityID < granularityLevels.length; granularityID++) { 
+          for (int amplitudeID = 0; amplitudeID < amplitudeLevels.length; amplitudeID++) {
+            standardizedData[participantID][experienceID][timbreID][granularityID][amplitudeID] = 
+              standardizedData[participantID][experienceID][timbreID][granularityID][amplitudeID]
+              - globalTimbreAverage[timbreID]
+              - globalGranularityAverage[granularityID]
+              - globalAmplitudeAverage[amplitudeID];
+          }
+        }
+      }
+    }
+  }
 }

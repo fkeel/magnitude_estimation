@@ -9,9 +9,9 @@ void longFormatOutput() {
   //Tmbr   11111 22222 33333 44444 11111 22222 33333 44444 11111 22222 33333 44444 
   //Gran   12345 12345 12345 12345 12345 12345 12345 12345 12345 12345 12345 12345 
 
-  for (int participantID = 0; participantID < participantCount; participantID++) {
+  for (int participantID = 0; participantID < participantCount-1; participantID++) {
     for (int i = 0; i < longFormat[participantID].length; i++) {
-      longFormat[participantID][i] = standardizedData[participantID][2][int(i/5)%4][i%5][int(i/20)%3];
+      longFormat[participantID][i] = standardizedData[participantID][0][int(i/5)%4][i%5][int(i/20)%3];
       print("index: ");
       print(i);
       print(", granularity: ");
@@ -31,8 +31,8 @@ void longFormatOutput() {
   for (int participantID = 0; participantID < participantCount; participantID++) {
     dataToWrite = "";
     for (int i = 0; i < longFormat[participantID].length; i++) {
-      dataToWrite = dataToWrite + longFormat[participantID][i] + ", ";  
+      dataToWrite = dataToWrite + longFormat[participantID][i] + ", ";
     }
-    appendTextToFile("new/"+"longformat_bumpy1.csv", dataToWrite + "\r\n");
+    appendTextToFile("new/"+"allData_r_e.csv", dataToWrite + "\r\n");
   }
 }
